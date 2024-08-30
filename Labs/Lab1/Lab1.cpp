@@ -104,6 +104,8 @@ void GetStrInput(char str[], int size)
     if(fgets(str, size, stdin) == NULL)
     {
       printf("Error getting input; try again.\n");
+      while (getchar() != '\n'); 
+      continue;
     }
 
     //strip \n if it is present
@@ -112,12 +114,15 @@ void GetStrInput(char str[], int size)
       if(str[i] == '\n')
       {
         str[i] = '\0';
+        break;
       }
     }
 
-    //cout << strnlen(str, size) << endl;
-    //cout << str << endl;
+    // Check for extra input and discard it
+    int ch;
+    while ((ch = getchar()) != '\n' && ch != EOF);
 
+    //handle empty input
     if(strnlen(str, size) == 0)
     {
       printf("Invalid input. Try again: ");
