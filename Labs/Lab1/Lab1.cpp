@@ -84,7 +84,6 @@ int main()
 	cout << "Based on the average score, final grade is: " << grade << endl;
 
 	cout << "looks good? (Yes or No): ";
-	cin.ignore();
 
 	GetComments(comments, sizeof(comments)); //BUFFER OVERFLOW
 
