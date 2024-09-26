@@ -1,0 +1,40 @@
+Script started on 2024-09-26 15:31:41-07:00 [TERM="xterm-256color" TTY="/dev/pts/1" COLUMNS="288" LINES="19"]
+[?2004h]0;jake@pop-os: ~/Documents/Schoolwork/CYB220/Homework/HW2[01;32mjake@pop-os[00m:[01;34m~/Documents/Schoolwork/CYB220/Homework/HW2[00m$ ./a.out 
+[?2004l
+---------------------------------------
+Welcome to the scoring system!
+Enter student's name: james
+
+Please enter student ID (Must be of style abc-12345. Extra input will be truncated): 0
+Invalid input! Must be of format abc-12345. Try again: a
+Invalid input! Must be of format abc-12345. Try again: 123-45678
+Invalid input! Must be of format abc-12345. Try again: abc-defgh
+Invalid input! Must be of format abc-12345. Try again: abc12345
+Invalid input! Must be of format abc-12345. Try again: 
+Invalid input, try again: abc-12345
+Enter up to 10 student's scores (0-100, will be truncated if larger) (if done, enter -1 to stop): 
+Score 1: 101
+Input must be up to 3 digits, and be between 0 and 100. Try again: 200
+Input must be up to 3 digits, and be between 0 and 100. Try again: 31
+Score 2: -100
+Input must be up to 3 digits, and be between 0 and 100. Try again: 0
+Score 3: -1
+Student's name is: james
+Student has 2 scores, sum is 31, and the average score is 15
+Based on the average score, final grade is: F
+looks good? (Yes or No): k
+Comments must be YES, NO, Y, or N. Try again: m
+Comments must be YES, NO, Y, or N. Try again: yeah
+y
+Comments must be YES, NO, Y, or N. Try again: y
+Comments - Looks good? - y
+
+Student name: james
+Student ID: abc-12345
+Final grade is: F
+
+Program exits successfully...
+[?2004h]0;jake@pop-os: ~/Documents/Schoolwork/CYB220/Homework/HW2[01;32mjake@pop-os[00m:[01;34m~/Documents/Schoolwork/CYB220/Homework/HW2[00m$ exit
+[?2004lexit
+
+Script done on 2024-09-26 15:33:13-07:00 [COMMAND_EXIT_CODE="0"]
