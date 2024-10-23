@@ -1,11 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <limits.h>
 
 /*
 TODO:
-Make Character limit on multiplication
 Handle integer overflow and underflow in all cases
+Fix overflow of operands
 */
 
 // Enum for ease of use
@@ -16,34 +17,40 @@ enum operandType
 	INVALID
 };
 
-// Prototypes
+// Get inputs
 char* GetExpressionInput(int* expressionLength);
-
-int GetOperator(char* expression, int expressionLength, char* operation);
-
 char* GetOperand1(char* expression, int expressionLength, int* operandLen);
 char* GetOperand2(char* expression, int expressionLength, int* operandLen);
 
+// Get information from strings
+int GetOperator(char* expression, int expressionLength, char* operation);
+int GetOperandType(char* operand, int operandLen);
+
+// Boolean checks
+int IsOperator(char curChar);
+int IsNumeric(char curChar);
+int IsAlpha(char curChar);
+int IsInvalidCharacter(char curChar);
+
+// Arithmetic operations
+int SafeAdd(int num1, int num2, int* result);
+
+// Process inputs
+char* CalculateResult(char* operand1, char* operand2, int operand1Len, int operand2Len, int op1Type, int op2Type, char operation);
 char* HandleAddition(char* operand1, char* operand2, int op1Len, int op2Len, int op1Type, int op2Type);
 char* HandleSubtraction(char* operand1, char* operand2, int op1Len, int op2Len, int op1Type, int op2Type);
 char* HandleMultiplication(char* operand1, char* operand2, int op1Len, int op2Len, int op1Type, int op2Type);
 char* HandleDivision(char* operand1, char* operand2, int op1Len, int op2Len, int op1Type, int op2Type);
 char* HandleModulus(char* operand1, char* operand2, int op1Len, int op2Len, int op1Type, int op2Type);
 
+// String processing
 char* ConcatStrings(char* str1, char* str2, int str1Len, int str2Len);
 char* ShiftString(char* str, int strLen, int key);
 char* CutNCharactersFromString(char* str, int strLen, int cutNum);
 char* AppendStringsByChar(char* dst, char* src, int srcLen, int* curLen);
-
-int GetOperandType(char* operand, int operandLen);
-
-int IsOperator(char curChar);
-int IsNumeric(char curChar);
-int IsAlpha(char curChar);
-int IsInvalidCharacter(char curChar);
+int CheckOpForOverflow(char* op ,int oplen);
 
 char* GetValidInput(int* expressionLength, int* operand1Len, int* operand2Len, int* op1Type, int* op2Type, char** operand1, char** operand2, char* operation);
-char* CalculateResult(char* operand1, char* operand2, int operand1Len, int operand2Len, int op1Type, int op2Type, char operation);
 
 int main()
 {
@@ -71,7 +78,8 @@ int main()
 	}
 }
 
-char* GetExpressionInput(int* expressionLength)
+//-----------FUNCTIONS TO GET INPUTS-----------
+char* GetExpressionInput(int* expressionLength) // Get expression from terminal
 {
 	(*expressionLength) = 0;
 
@@ -103,34 +111,7 @@ char* GetExpressionInput(int* expressionLength)
 	return buffer;
 }
 
-// Return 1 on success, 0 on failure
-int GetOperator(char* expression, int expressionLength, char* operation)
-{
-	// Check for valid string
-	if(expression == NULL)
-	{
-		printf("ERROR: Null expression!\n");
-		return 0;
-	}
-
-	// For every character in expression, check if it is an operator. If so, return it. Otherwise, return 'e'.
-	for(int i = 0; i < expressionLength; i++)
-	{
-		if(!IsOperator(expression[i]))
-		{
-			continue;
-		}
-
-		*operation = expression[i];
-		return 1;
-	}
-
-	// If no character, return 0
-	return 0;
-}
-
-// Return NULL if error, operand1 otherwise
-char* GetOperand1(char* expression, int expressionLength, int* operandLen)
+char* GetOperand1(char* expression, int expressionLength, int* operandLen)// Return NULL if error, operand1 otherwise
 {
 	// Get length of operand1
 	for(int i = 0; i < expressionLength && !IsOperator(expression[i]); i++)
@@ -155,8 +136,7 @@ char* GetOperand1(char* expression, int expressionLength, int* operandLen)
 	return NULL;
 }
 
-// Return NULL if error, operand1 otherwise
-char* GetOperand2(char* expression, int expressionLength, int* operandLen)
+char* GetOperand2(char* expression, int expressionLength, int* operandLen)// Return NULL if error, operand1 otherwise
 {
 	int operatorIndex = 0;
 
@@ -184,7 +164,9 @@ char* GetOperand2(char* expression, int expressionLength, int* operandLen)
 	return NULL;
 }
 
-int GetOperandType(char* operand, int operandLen)
+
+//------------PULL INFORMATION FROM STRINGS--------
+int GetOperandType(char* operand, int operandLen)// Returns INTEGER, STRING, or INVALID
 {
 	int qInt = 0;
 	int qString = 0;
@@ -224,6 +206,11 @@ int GetOperandType(char* operand, int operandLen)
 	// Handle return types
 	if(qInt)
 	{
+		// Check for overflow on operands
+		if(!CheckOpForOverflow(operand, operandLen))
+		{
+			return INVALID;
+		}
 		return INTEGER;
 	}
 
@@ -235,13 +222,164 @@ int GetOperandType(char* operand, int operandLen)
 	return INVALID;
 }
 
+int GetOperator(char* expression, int expressionLength, char* operation)// Return 1 on success, 0 on failure
+{
+	// Check for valid string
+	if(expression == NULL)
+	{
+		printf("ERROR: Null expression!\n");
+		return 0;
+	}
+
+	// For every character in expression, check if it is an operator. If so, return it. Otherwise, return 'e'.
+	for(int i = 0; i < expressionLength; i++)
+	{
+		if(!IsOperator(expression[i]))
+		{
+			continue;
+		}
+
+		*operation = expression[i];
+		return 1;
+	}
+
+	// If no character, return 0
+	return 0;
+}
+
+
+//------------BOOLEAN CHECKS--------------
+int IsOperator(char curChar)
+{
+	if(curChar == '+' || curChar == '-' || curChar == '*' || curChar == '/' || curChar == '%')
+	{
+		return 1;
+	}
+
+	return 0;
+}
+
+int IsNumeric(char curChar)
+{
+	if(curChar < '0' || curChar > '9')
+	{
+		return 0;
+	}
+
+	return 1;
+}
+
+int IsAlpha(char curChar)
+{
+	if(curChar >= 'a' && curChar <= 'z')
+	{
+		return 1;
+	}
+
+	if(curChar >= 'A' && curChar <= 'Z')
+	{
+		return 1;
+	}
+
+	return 0;
+}
+
+int IsInvalidCharacter(char curChar)
+{
+	if(!IsOperator(curChar) && !IsNumeric(curChar) && !IsAlpha(curChar))
+	{
+		return 1;
+	}
+
+	return 0;
+}
+
+
+//----------------ARITHMETIC OPERATIONS-----------
+int SafeAdd(int num1, int num2, int* result)//Add and check for buffer overflow, 0 on failure, 1 on success
+{
+	(*result) = 0;
+
+	// num1 + num2 > INT_MAX -> num > INT_MAX - NUM2
+	if(num1 > INT_MAX - num2)
+	{
+		return 0;
+	}
+
+	// num1 - num2 < INT_MIN -> num1 < INT_MIN + num2
+	if(num1 < INT_MIN + num2)
+	{
+		return 0;
+	}
+
+	(*result) = num1 + num2;
+	return 1;
+}
+
+int SafeMultiply(int num1, int num2, int* result)
+{
+	// num1 shoulud equal num1 * num2 / num2. If not, we have integer overflow.
+	if(num1  == ((num1 * num2) / num2))
+	{
+		(*result) = 0;
+		return 0;
+	}
+
+	return 1;
+}
+
+
+//---------------PROCESS INPUTS-------------
+char* CalculateResult(char* operand1, char* operand2, int operand1Len, int operand2Len, int op1Type, int op2Type, char operation)
+{
+	/*
+	printf("operand1: %s\n", operand1);
+	printf("operand2: %s\n", operand2);
+	printf("op1Len: %i\n", operand1Len);
+	printf("op2Len: %i\n", operand2Len);
+	printf("op1Type: %i\n", op1Type);
+	printf("op2Type: %i\n", op2Type);
+	printf("operation: %c\n", operation);
+	*/
+
+	switch(operation)
+	{
+		case('+'):
+			return HandleAddition(operand1, operand2, operand1Len, operand2Len, op1Type, op2Type);
+
+		case('-'):
+			return HandleSubtraction(operand1, operand2, operand1Len, operand2Len, op1Type, op2Type);
+
+		case('*'):
+			return HandleMultiplication(operand1, operand2, operand1Len, operand2Len, op1Type, op2Type);
+
+		case('/'):
+			return HandleDivision(operand1, operand2, operand1Len, operand2Len, op1Type, op2Type);
+
+		case('%'):
+			return HandleModulus(operand1, operand2, operand1Len, operand2Len, op1Type, op2Type);
+	
+		default:
+			printf("Unexpected charcter for operation: %c\n", operation);
+			return "";
+	}
+}
+
 char* HandleAddition(char* operand1, char* operand2, int op1Len, int op2Len, int op1Type, int op2Type)
 {
 	// Add numbers and return
 	if(op1Type == INTEGER && op2Type == INTEGER)
 	{
 		char* result = (char*)malloc(sizeof(char) * 101);
-		sprintf(result, "%i", atoi(operand1) + atoi(operand2));
+		int resNum = 0;
+
+		// Perform addition using SafeAdd
+		if(!(SafeAdd(atoi(operand1), atoi(operand2), &resNum)))
+		{
+			printf("Integer overflow!\n");
+		}
+
+		sprintf(result, "%i", resNum);
 		return result;
 	}
 
@@ -260,11 +398,12 @@ char* HandleAddition(char* operand1, char* operand2, int op1Len, int op2Len, int
 
 char* HandleSubtraction(char* operand1, char* operand2, int op1Len, int op2Len, int op1Type, int op2Type)
 {
-	// Add numbers and return
+	// Add numbers and return. Overflow not possible since at least one operand is positive
 	if(op1Type == INTEGER && op2Type == INTEGER)
 	{
 		char* result = (char*)malloc(sizeof(char) * 101);
-		sprintf(result, "%i", atoi(operand1) - atoi(operand2));
+		int resNum = atoi(operand1) - atoi(operand2);
+		sprintf(result, "%i", resNum);
 		return result;
 	}
 
@@ -287,7 +426,14 @@ char* HandleMultiplication(char* operand1, char* operand2, int op1Len, int op2Le
 	if(op1Type == INTEGER && op2Type == INTEGER)
 	{
 		char* result = (char*)malloc(sizeof(char) * 101);
-		sprintf(result, "%i", atoi(operand1) * atoi(operand2));
+		int resNum = 0;
+
+		if(!SafeMultiply(atoi(operand1), atoi(operand2), &resNum))
+		{
+			printf("Integer overflow!\n");
+		}
+
+		sprintf(result, "%i", resNum);
 		return result;
 	}
 
@@ -352,7 +498,7 @@ char* HandleMultiplication(char* operand1, char* operand2, int op1Len, int op2Le
 
 char* HandleDivision(char* operand1, char* operand2, int op1Len, int op2Len, int op1Type, int op2Type)
 {
-	// Divide numbers and return
+	// Divide numbers and return. Overflow not possible because its always 2 pos operands
 	if(op1Type == INTEGER && op2Type == INTEGER)
 	{
 		char* result = (char*)malloc(sizeof(char) * 101);
@@ -394,6 +540,22 @@ char* HandleModulus(char* operand1, char* operand2, int op1Len, int op2Len, int 
 	{
 		return "\0";
 	}
+}
+
+
+//--------------------STRING PROCESSING--------------------
+int CheckOpForOverflow(char* op, int oplen)
+{
+	char res[oplen];
+	sprintf(res, "%i", atoi(op));
+
+	// convert result from atoi back to string and compare. If not the same, there has been overflow
+	if(strcmp(op, res) != 0)
+	{
+		return 0;
+	}
+
+	return 1;
 }
 
 char* ShiftString(char* str, int strLen, int key)
@@ -472,51 +634,6 @@ char* AppendStringsByChar(char* dst, char* src, int srcLen, int* curLen)
 	}
 
 	return dst;
-}
-
-int IsOperator(char curChar)
-{
-	if(curChar == '+' || curChar == '-' || curChar == '*' || curChar == '/' || curChar == '%')
-	{
-		return 1;
-	}
-
-	return 0;
-}
-
-int IsNumeric(char curChar)
-{
-	if(curChar < '0' || curChar > '9')
-	{
-		return 0;
-	}
-
-	return 1;
-}
-
-int IsAlpha(char curChar)
-{
-	if(curChar >= 'a' && curChar <= 'z')
-	{
-		return 1;
-	}
-
-	if(curChar >= 'A' && curChar <= 'Z')
-	{
-		return 1;
-	}
-
-	return 0;
-}
-
-int IsInvalidCharacter(char curChar)
-{
-	if(!IsOperator(curChar) && !IsNumeric(curChar) && !IsAlpha(curChar))
-	{
-		return 1;
-	}
-
-	return 0;
 }
 
 char* GetValidInput(int* expressionLength, int* operand1Len, int* operand2Len, int* op1Type, int* op2Type, char** operand1, char** operand2, char* operation)
@@ -604,39 +721,4 @@ char* GetValidInput(int* expressionLength, int* operand1Len, int* operand2Len, i
 		validInput = 1;
 
 	} while(!validInput);
-}
-
-char* CalculateResult(char* operand1, char* operand2, int operand1Len, int operand2Len, int op1Type, int op2Type, char operation)
-{
-	/*
-	printf("operand1: %s\n", operand1);
-	printf("operand2: %s\n", operand2);
-	printf("op1Len: %i\n", operand1Len);
-	printf("op2Len: %i\n", operand2Len);
-	printf("op1Type: %i\n", op1Type);
-	printf("op2Type: %i\n", op2Type);
-	printf("operation: %c\n", operation);
-	*/
-
-	switch(operation)
-	{
-		case('+'):
-			return HandleAddition(operand1, operand2, operand1Len, operand2Len, op1Type, op2Type);
-
-		case('-'):
-			return HandleSubtraction(operand1, operand2, operand1Len, operand2Len, op1Type, op2Type);
-
-		case('*'):
-			return HandleMultiplication(operand1, operand2, operand1Len, operand2Len, op1Type, op2Type);
-
-		case('/'):
-			return HandleDivision(operand1, operand2, operand1Len, operand2Len, op1Type, op2Type);
-
-		case('%'):
-			return HandleModulus(operand1, operand2, operand1Len, operand2Len, op1Type, op2Type);
-	
-		default:
-			printf("Unexpected charcter for operation: %c\n", operation);
-			return "";
-	}
 }
