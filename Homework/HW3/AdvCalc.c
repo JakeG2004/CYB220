@@ -294,6 +294,20 @@ int IsInvalidCharacter(char curChar)
 	return 0;
 }
 
+int CheckOpForOverflow(char* op, int oplen)
+{
+	char res[oplen];
+	sprintf(res, "%i", atoi(op));
+
+	// convert result from atoi back to string and compare. If not the same, there has been overflow
+	if(strcmp(op, res) != 0)
+	{
+		return 0;
+	}
+
+	return 1;
+}
+
 
 //----------------ARITHMETIC OPERATIONS-----------
 int SafeAdd(int num1, int num2, int* result)//Add and check for buffer overflow, 0 on failure, 1 on success
@@ -322,20 +336,6 @@ int SafeMultiply(int num1, int num2, int* result)
 	if(num1  == ((num1 * num2) / num2))
 	{
 		(*result) = 0;
-		return 0;
-	}
-
-	return 1;
-}
-
-int CheckOpForOverflow(char* op, int oplen)
-{
-	char res[oplen];
-	sprintf(res, "%i", atoi(op));
-
-	// convert result from atoi back to string and compare. If not the same, there has been overflow
-	if(strcmp(op, res) != 0)
-	{
 		return 0;
 	}
 
