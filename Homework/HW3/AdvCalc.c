@@ -5,7 +5,7 @@
 
 /*
 TODO:
-Handle integer overflow and underflow in all cases
+Handle integer overflow in all cases
 */
 
 // Enum for ease of use
@@ -206,11 +206,6 @@ int GetOperandType(char* operand, int operandLen)// Returns INTEGER, STRING, or 
 	// Handle return types
 	if(qInt)
 	{
-		// Check for overflow on operands
-		if(!CheckOpForOverflow(operand, operandLen))
-		{
-			return INVALID;
-		}
 		return INTEGER;
 	}
 
@@ -715,6 +710,27 @@ char* GetValidInput(int* expressionLength, int* operand1Len, int* operand2Len, i
 		if(*operation == '%' && (*op1Type == STRING || *op2Type == STRING))
 		{
 			printf("Mod with string\n");
+			continue;
+		}
+
+		// check for length limits
+		if(*operand1Len > 100 || *operand2Len > 100)
+		{
+			printf("Inputs too big!\n");
+			continue;
+		}
+
+		// Check for overflow on operands
+		if((*op1Type == INTEGER) && !CheckOpForOverflow(*operand1, *operand1Len))
+		{
+			printf("Input contains integer overflow!\n");
+			continue;
+		}
+
+		// Check for overflow on operands
+		if((*op2Type == INTEGER) && !CheckOpForOverflow(*operand2, *operand2Len))
+		{
+			printf("Input contains integer overflow!\n");
 			continue;
 		}
 
