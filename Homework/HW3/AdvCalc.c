@@ -33,6 +33,7 @@ char* HandleModulus(char* operand1, char* operand2, int op1Len, int op2Len, int 
 char* ConcatStrings(char* str1, char* str2, int str1Len, int str2Len);
 char* ShiftString(char* str, int strLen, int key);
 char* CutNCharactersFromString(char* str, int strLen, int cutNum);
+char* AppendStringsByChar(char* dst, char* src, int srcLen, int* curLen);
 
 int GetOperandType(char* operand, int operandLen);
 
@@ -293,17 +294,29 @@ char* HandleMultiplication(char* operand1, char* operand2, int op1Len, int op2Le
 	// operand1 is int, operand2 is string
 	if(op1Type == INTEGER && op2Type == STRING)
 	{
+		// Some variables concerning length
 		int totalChars = atoi(operand1) * op2Len;
-		if(atoi(operand1) * op2Len > 1024)
+		int curLen = 0;
+
+		// Cap length
+		if(totalChars > 1024)
 		{
-			printf("Too long!\n");
+			printf("Too long! Truncating result...\n");
 			totalChars = 1024;
 		}
 
+		// Malloc
 		char* result = (char*)malloc(sizeof(char) * totalChars);
+
+		// Append strings limited to n characters
 		for(int i = 0; i < atoi(operand1); i++)
-		{		
-			strncat(result, operand2, op2Len);
+		{
+			result = AppendStringsByChar(result, operand2, op2Len, &curLen);
+
+			if(curLen >= 1024)
+			{
+				return result;
+			}
 		}
 
 		return result;
@@ -312,13 +325,26 @@ char* HandleMultiplication(char* operand1, char* operand2, int op1Len, int op2Le
 	// operand1 is string, operand2 is int
 	if(op1Type == STRING && op2Type == INTEGER)
 	{
+		int totalChars = atoi(operand2) * op1Len;
+		int curLen = 0;
 
-		char* result = (char*)malloc(sizeof(char) * atoi(operand2) * op1Len);
-		for(int i = 0; i < atoi(operand2); i++)
-		{		
-			strncat(result, operand1, 1024);
+		if(totalChars > 1024)
+		{
+			printf("Too long! Truncating result...\n");
+			totalChars = 1024;
 		}
 
+		char* result = (char*)malloc(sizeof(char) * totalChars);
+
+		for(int i = 0; i < atoi(operand2); i++)
+		{
+			result = AppendStringsByChar(result, operand1, op1Len, &curLen);
+
+			if(curLen >= 1024)
+			{
+				return result;
+			}
+		}
 
 		return result;
 	}
@@ -368,35 +394,6 @@ char* HandleModulus(char* operand1, char* operand2, int op1Len, int op2Len, int 
 	{
 		return "\0";
 	}
-}
-
-char* ConcatStrings(char* str1, char* str2, int str1Len, int str2Len)
-{
-	int totalLen = str1Len + str2Len;
-
-	if(totalLen > 1024)
-	{
-		printf("String too long!\n");
-		totalLen = 1024;
-	}
-
-	char* buffer = (char*)malloc(sizeof(char) * totalLen);
-
-	// Add first string
-	for(int i = 0; i < str1Len; i++)
-	{
-		buffer[i] = str1[i];
-	}
-
-	// Add second string
-	for(int i = 0; i < str2Len && i + str1Len < 1024; i++)
-	{
-		buffer[i + str1Len] = str2[i];
-	}
-
-	buffer[totalLen] = '\0';
-
-	return buffer;
 }
 
 char* ShiftString(char* str, int strLen, int key)
@@ -460,6 +457,21 @@ char* CutNCharactersFromString(char* str, int strLen, int cutNum)
 	}
 
 	return buffer;
+}
+
+char* AppendStringsByChar(char* dst, char* src, int srcLen, int* curLen)
+{
+	for(int i = 0; i < srcLen; i++)
+	{
+		sprintf(dst, "%s%c", dst, src[i]);
+		(*curLen)++;
+		if((*curLen) >= 1024)
+		{
+			return dst;
+		}
+	}
+
+	return dst;
 }
 
 int IsOperator(char curChar)
