@@ -6,7 +6,6 @@
 /*
 TODO:
 Handle integer overflow and underflow in all cases
-Fix overflow of operands
 */
 
 // Enum for ease of use
@@ -31,9 +30,11 @@ int IsOperator(char curChar);
 int IsNumeric(char curChar);
 int IsAlpha(char curChar);
 int IsInvalidCharacter(char curChar);
+int CheckOpForOverflow(char* op ,int oplen);
 
 // Arithmetic operations
 int SafeAdd(int num1, int num2, int* result);
+int SafeMultiply(int num1, int num2, int* result);
 
 // Process inputs
 char* CalculateResult(char* operand1, char* operand2, int operand1Len, int operand2Len, int op1Type, int op2Type, char operation);
@@ -48,7 +49,6 @@ char* ConcatStrings(char* str1, char* str2, int str1Len, int str2Len);
 char* ShiftString(char* str, int strLen, int key);
 char* CutNCharactersFromString(char* str, int strLen, int cutNum);
 char* AppendStringsByChar(char* dst, char* src, int srcLen, int* curLen);
-int CheckOpForOverflow(char* op ,int oplen);
 
 char* GetValidInput(int* expressionLength, int* operand1Len, int* operand2Len, int* op1Type, int* op2Type, char** operand1, char** operand2, char* operation);
 
@@ -328,6 +328,20 @@ int SafeMultiply(int num1, int num2, int* result)
 	return 1;
 }
 
+int CheckOpForOverflow(char* op, int oplen)
+{
+	char res[oplen];
+	sprintf(res, "%i", atoi(op));
+
+	// convert result from atoi back to string and compare. If not the same, there has been overflow
+	if(strcmp(op, res) != 0)
+	{
+		return 0;
+	}
+
+	return 1;
+}
+
 
 //---------------PROCESS INPUTS-------------
 char* CalculateResult(char* operand1, char* operand2, int operand1Len, int operand2Len, int op1Type, int op2Type, char operation)
@@ -544,20 +558,6 @@ char* HandleModulus(char* operand1, char* operand2, int op1Len, int op2Len, int 
 
 
 //--------------------STRING PROCESSING--------------------
-int CheckOpForOverflow(char* op, int oplen)
-{
-	char res[oplen];
-	sprintf(res, "%i", atoi(op));
-
-	// convert result from atoi back to string and compare. If not the same, there has been overflow
-	if(strcmp(op, res) != 0)
-	{
-		return 0;
-	}
-
-	return 1;
-}
-
 char* ShiftString(char* str, int strLen, int key)
 {
 	//key = key % 26;
