@@ -1,0 +1,57 @@
+Script started on 2024-10-24 19:40:22-07:00 [TERM="xterm-256color" TTY="/dev/pts/1" COLUMNS="88" LINES="34"]
+[?2004h]0;jake@pop-os: ~/Documents/Schoolwork/CYB220/Homework/HW3[01;32mjake@pop-os[00m:[01;34m~/Documents/Schoolwork/CYB220/Homework/HW3[00m$ exit./a.out 
+[?2004lEnter an expression: 77777*100000
+Result: -812234592
+Enter an expression: ^C
+[?2004h]0;jake@pop-os: ~/Documents/Schoolwork/CYB220/Homework/HW3[01;32mjake@pop-os[00m:[01;34m~/Documents/Schoolwork/CYB220/Homework/HW3[00m$ ./a.out [4Pexit./a.out [Kgcc AdvCalc.c 
+[?2004l[?2004h]0;jake@pop-os: ~/Documents/Schoolwork/CYB220/Homework/HW3[01;32mjake@pop-os[00m:[01;34m~/Documents/Schoolwork/CYB220/Homework/HW3[00m$ ./a.out
+[?2004lEnter an expression: 3*1
+Integer overflow!
+Result: 0
+Enter an expression: ^C
+[?2004h]0;jake@pop-os: ~/Documents/Schoolwork/CYB220/Homework/HW3[01;32mjake@pop-os[00m:[01;34m~/Documents/Schoolwork/CYB220/Homework/HW3[00m$ ./a.outgcc AdvCalc.c 
+[?2004l[?2004h]0;jake@pop-os: ~/Documents/Schoolwork/CYB220/Homework/HW3[01;32mjake@pop-os[00m:[01;34m~/Documents/Schoolwork/CYB220/Homework/HW3[00m$ gcc AdvCalc.c [7P./a.out
+[?2004lEnter an expression: 2*3
+Result: 6
+Enter an expression: 77777*10000
+Result: 777770000
+Enter an expression: ^[[A    77777*100000
+Integer overflow!
+Result: 0
+Enter an expression: exit
+Exiting program...
+[?2004h]0;jake@pop-os: ~/Documents/Schoolwork/CYB220/Homework/HW3[01;32mjake@pop-os[00m:[01;34m~/Documents/Schoolwork/CYB220/Homework/HW3[00m$ ./a.out[K[K[K[K[K[K[Kclear
+[?2004l[H[2J[3J[?2004h]0;jake@pop-os: ~/Documents/Schoolwork/CYB220/Homework/HW3[01;32mjake@pop-os[00m:[01;34m~/Documents/Schoolwork/CYB220/Homework/HW3[00m$ clear
+[?2004l[H[2J[3J[?2004h]0;jake@pop-os: ~/Documents/Schoolwork/CYB220/Homework/HW3[01;32mjake@pop-os[00m:[01;34m~/Documents/Schoolwork/CYB220/Homework/HW3[00m$ clear./a.out
+[?2004lEnter an expression: 2000000000+300000000
+Integer overflow!
+Result: 0
+Enter an expression: 123+4000000000
+Input contains integer overflow!
+Enter an expression: 77777*100000
+Integer overflow!
+Result: 0
+Enter an expression: -abc123
+Failed to get operand1
+Enter an expression: ac bcde*500, 
+Too long! Truncating result...
+Result: abcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcd
+Enter an expression: abcde*500,
+Invalid input(s) detected.
+Enter an expression: 9+abc;def
+Invalid input(s) detected.
+Enter an expression: 123+5+6+7
+Invalid input(s) detected.
+Enter an expression: Abc-xyz
+Both operands are strings
+Enter an expression: 3*aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+Inputs too big!
+Enter an expression: 500%0
+Divide or mod by 0 error
+Enter an expression: Abc%4
+Mod with string
+Enter an expression: 3 + 0
+Invalid input(s) detected.
+Enter an expression: exit
+Exiting program...
+[?2004h]0;jake@pop-os: ~/Documents/Schoolwork/CYB220/Homework/HW3[01;32mjake@pop-os[00m:[01;34m~/Documents/Schoolwork/CYB220/Homework/HW3[00m$ [K]0;jake@pop-os: ~/Documents/Schoolwork/CYB220/Homework/HW3[01;32mjake@pop-os[00m:[01;34m~/Documents/Schoolwork/CYB220/Homework/HW3[00m$ [K]0;jake@pop-os: ~/Documents/Schoolwork/CYB220/Homework/HW3[01;32mjake@pop-os[00m:[01;34m~/Documents/Schoolwork/CYB220/Homework/HW3[00m$ [K]0;jake@pop-os: ~/Documents/Schoolwork/CYB220/Homework/HW3[01;32mjake@pop-os[00m:[01;34m~/Documents/Schoolwork/CYB220/Homework/HW3[00m$ [K]0;jake@pop-os: ~/Documents/Schoolwork/CYB220/Homework/HW3[01;32mjake@pop-os[00m:[01;34m~/Documents/Schoolwork/CYB220/Homework/HW3[00m$ [K]0;jake@pop-os: ~/Documents/Schoolwork/CYB220/Homework/HW3[01;32mjake@pop-os[00m:[01;34m~/Documents/Schoolwork/CYB220/Homework/HW3[00m$ [K]0;jake@pop-os: ~/Documents/Schoolwork/CYB220/Homework/HW3[01;32mjake@pop-os[00m:[01;34m~/Documents/Schoolwork/CYB220/Homework/HW3[00m$ [K]0;jake@pop-os: ~/Documents/Schoolwork/CYB220/Homework/HW3[01;32mjake@pop-os[00m:[01;34m~/Documents/Schoolwork/CYB220/Homework/HW3[00m$ [K]0;jake@pop-os: ~/Documents/Schoolwork/CYB220/Homework/HW3[01;32mjake@pop-os[00m:[01;34m~/Documents/Schoolwork/CYB220/Homework/HW3[00m$ [K]0;jake@pop-os: ~/Documents/Schoolwork/CYB220/Homework/HW3[01;32mjake@pop-os[00m:[01;34m~/Documents/Schoolwork/CYB220/Homework/HW3[00m$ [K]0;jake@pop-os: ~/Documents/Schoolwork/CYB220/Homework/HW3[01;32mjake@pop-os[00m:[01;34m~/Documents/Schoolwork/CYB220/Homework/HW3[00m$ [K]0;jake@pop-os: ~/Documents/Schoolwork/CYB220/Homework/HW3[01;32mjake@pop-os[00m:[01;34m~/Documents/Schoolwork/CYB220/Homework/HW3[00m$ [K]0;jake@pop-os: ~/Documents/Schoolwork/CYB220/Homework/HW3[01;32mjake@pop-os[00m:[01;34m~/Documents/Schoolwork/CYB220/Homework/HW3[00m$ [K]0;jake@pop-os: ~/Documents/Schoolwork/CYB220/Homework/HW3[01;32mjake@pop-os[00m:[01;34m~/Documents/Schoolwork/CYB220/Homework/HW3[00m$ [K]0;jake@pop-os: ~/Documents/Schoolwork/CYB220/Homework/HW3[01;32mjake@pop-os[00m:[01;34m~/Documents/Schoolwork/CYB220/Homework/HW3[00m$ [K]0;jake@pop-os: ~/Documents/Schoolwork/CYB220/Homework/HW3[01;32mjake@pop-os[00m:[01;34m~/Documents/Schoolwork/CYB220/Homework/HW3[00m$ [K]0;jake@pop-os: ~/Documents/Schoolwork/CYB220/Homework/HW3[01;32mjake@pop-os[00m:[01;34m~/Documents/Schoolwork/CYB220/Homework/HW3[00m$ [K]0;jake@pop-os: ~/Documents/Schoolwork/CYB220/Homework/HW3[01;32mjake@pop-os[00m:[01;34m~/Documents/Schoolwork/CYB220/Homework/HW3[00m$ [K]0;jake@pop-os: ~/Documents/Schoolwork/CYB220/Homework/HW3[01;32mjake@pop-os[00m:[01;34m~/Documents/Schoolwork/CYB220/Homework/HW3[00m$ [K]0;jake@pop-os: ~/Documents/Schoolwork/CYB220/Homework/HW3[01;32mjake@pop-os[00m:[01;34m~/Documents/Schoolwork/CYB220/Homework/HW3[00m$ [K]0;jake@pop-os: ~/Documents/Schoolwork/CYB220/Homework/HW3[01;32mjake@pop-os[00m:[01;34m~/Documents/Schoolwork/CYB220/Homework/HW3[00m$ [K]0;jake@pop-os: ~/Documents/Schoolwork/CYB220/Homework/HW3[01;32mjake@pop-os[00m:[01;34m~/Documents/Schoolwork/CYB220/Homework/HW3[00m$ [K]0;jake@pop-os: ~/Documents/Schoolwork/CYB220/Homework/HW3[01;32mjake@pop-os[00m:[01;34m~/Documents/Schoolwork/CYB220/Homework/HW3[00m$ [K]0;jake@pop-os: ~/Documents/Schoolwork/CYB220/Homework/HW3[01;32mjake@pop-os[00m:[01;34m~/Documents/Schoolwork/CYB220/Homework/HW3[00m$ [K]0;jake@pop-os: ~/Documents/Schoolwork/CYB220/Homework/HW3[01;32mjake@pop-os[00m:[01;34m~/Documents/Schoolwork/CYB220/Homework/HW3[00m$ [K]0;jake@pop-os: ~/Documents/Schoolwork/CYB220/Homework/HW3[01;32mjake@pop-os[00m:[01;34m~/Documents/Schoolwork/CYB220/Homework/HW3[00m$ [K]0;jake@pop-os: ~/Documents/Schoolwork/CYB220/Homework/HW3[01;32mjake@pop-os[00m:[01;34m~/Documents/Schoolwork/CYB220/Homework/HW3[00m$ [K]0;jake@pop-os: ~/Documents/Schoolwork/CYB220/Homework/HW3[01;32mjake@pop-os[00m:[01;34m~/Documents/Schoolwork/CYB220/Homework/HW3[00m$ [K]0;jake@pop-os: ~/Documents/Schoolwork/CYB220/Homework/HW3[01;32mjake@pop-os[00m:[01;34m~/Do

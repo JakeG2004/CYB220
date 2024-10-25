@@ -83,7 +83,7 @@ char* GetExpressionInput(int* expressionLength) // Get expression from terminal
 {
 	(*expressionLength) = 0;
 
-	int bufSize = 101;
+	int bufSize = 120;
 	char* buffer = (char*)malloc(sizeof(char) * bufSize);
 
 	printf("Enter an expression: ");
@@ -104,6 +104,11 @@ char* GetExpressionInput(int* expressionLength) // Get expression from terminal
 	for(int i = 0; buffer[i] != '\0' && i < bufSize; i++)
 	{
 		(*expressionLength)++;
+	}
+
+	if(*expressionLength > 100)
+	{
+		while (getchar() != '\n');
 	}
 
 	// Set the last character to be a '\0'
@@ -327,14 +332,16 @@ int SafeAdd(int num1, int num2, int* result)//Add and check for buffer overflow,
 
 int SafeMultiply(int num1, int num2, int* result)
 {
-	// num1 shoulud equal num1 * num2 / num2. If not, we have integer overflow.
-	if(num1  == ((num1 * num2) / num2))
-	{
-		(*result) = 0;
-		return 0;
-	}
+    // Check for overflow by comparing against INT_MAX and INT_MIN
+    if (num1 != 0 && (num2 > INT_MAX / num1 || num2 < INT_MIN / num1)) {
+        // Overflow detected
+        *result = 0;
+        return 0;
+    }
 
-	return 1;
+    // Safe to multiply
+    *result = num1 * num2;
+    return 1;
 }
 
 
