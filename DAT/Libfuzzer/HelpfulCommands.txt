@@ -1,0 +1,7 @@
+clang -Wall -Wextra request.c fuzzer.c -fsanitize=fuzzer -o fuzz
+
+cat <crashname> | xxd
+
+echo -ne "EE\x2HI" | ./program
+
+clang request.c main.c -o program 

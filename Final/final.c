@@ -1,0 +1,259 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int GetUserInput(char* result);
+
+void CountVowels(char* str);
+void SumNumbers(char* str);
+void StripWhiteSpace(char* str);
+void CompressInput(char* str);
+
+int IsNumeric(char curChar);
+
+int MyStrnCmp(char* str1, char* str2, int numChars);
+int MyStrNLen(char* str, int n);
+
+const int MAX_STR_SIZE = 999;
+
+int main()
+{
+    char* userExpression = (char*)malloc(sizeof(char) * MAX_STR_SIZE);
+
+    // Get input
+    if(GetUserInput(userExpression) == 0)
+    {
+        exit(-1);
+    }
+
+    // Handle exit condition
+    if(MyStrnCmp(userExpression, "exit", MAX_STR_SIZE) == 0)
+    {
+        printf("Exiting program...\n");
+        exit(0);
+    }
+
+    CountVowels(userExpression);
+    SumNumbers(userExpression);
+    StripWhiteSpace(userExpression);
+    CompressInput(userExpression);
+}
+
+int GetUserInput(char* result)
+{
+    int validInput = 0;
+
+    while(!validInput)
+    {
+        validInput = 1;
+
+        // Prompt user
+        printf("Enter your expression: ");
+
+        // Get input from stdio
+        fgets(result, MAX_STR_SIZE, stdin);
+
+        // Strip newline
+        for(int i = 0; i < MAX_STR_SIZE; i++)
+        {
+            if(result[i] == '\n')
+            {
+                result[i] = '\0';
+            }
+        }
+
+        // Try again on empty string
+        if(MyStrnCmp(result, "", sizeof(result)) == 0)
+        {
+            printf("Input cannot be empty. ");
+            validInput = 0;
+            continue;
+        }
+    }
+
+    // Empty stdin if overfull
+    if(MyStrNLen(result, MAX_STR_SIZE) >= MAX_STR_SIZE - 1)
+    {
+        while (getchar() != '\n');
+    }
+
+    // Null-terminate string
+    result[MAX_STR_SIZE - 1] = '\0';
+}
+
+void CountVowels(char* str)
+{
+    enum Vowels
+    {
+        A,
+        E,
+        I,
+        O,
+        U
+    };
+
+    int vowels[5] = {0};
+
+    // Search for the vowels
+    for(int i = 0; str[i] != '\0'; i++)
+    {
+        char curChar = str[i];
+
+        if(curChar == 'a' || curChar == 'A')
+        {
+            vowels[A]++;
+            continue;
+        }
+
+        if(curChar == 'e' || curChar == 'E')
+        {
+            vowels[E]++;
+            continue;
+        }
+
+        if(curChar == 'i' || curChar == 'I')
+        {
+            vowels[I]++;
+            continue;
+        }
+
+        if(curChar == 'o' || curChar == 'O')
+        {
+            vowels[O]++;
+            continue;
+        }
+
+        if(curChar == 'u' || curChar == 'U')
+        {
+            vowels[U]++;
+            continue;
+        }
+    }
+
+    // Print results
+    printf("\n===== VOWEL COUNT =====\n");
+    printf("A - %i\n", vowels[A]);
+    printf("E - %i\n", vowels[E]);
+    printf("I - %i\n", vowels[I]);
+    printf("O - %i\n", vowels[O]);
+    printf("U - %i\n", vowels[U]);
+}
+
+void SumNumbers(char* str)
+{
+    int sum = 0;
+
+    for(int i = 0; str[i] != '\0'; i++)
+    {
+        if(IsNumeric(str[i]))
+        {
+            sum += (int)(str[i] - '0');
+        }
+    }
+
+    printf("\n===== SUM OF DIGITS IN STRING =====\n");
+    printf("The sum of the digits in the string is %i\n", sum);
+}
+
+void StripWhiteSpace(char* str)
+{
+    printf("\n===== STRIP WHITESPACE =====\n");
+
+    for(int i = 0; str[i] != '\0'; i++)
+    {
+        if(str[i] != ' ' && str[i] != '\t')
+        {
+            printf("%c", str[i]);
+        }
+    }
+
+    printf("\n");
+}
+
+void CompressInput(char* str)
+{
+    printf("\n===== COMPRESSED INPUT =====\n");
+    for(int i = 0; str[i] != '\0'; i++)
+    {
+        // There will always be at least one of the current character
+        int charCount = 1;
+        printf("%c", str[i]);
+
+        // Count duplicate characters in strings
+        while(str[i] == str[i+1])
+        {
+            charCount++;
+            i++;
+
+            // Check bounds
+            if(i >= MAX_STR_SIZE)
+            {
+                break;
+            }
+        }
+
+        // Ignore the counter for single characters
+        if(charCount != 1)
+        {
+            printf("%i", charCount);
+        }
+    }
+
+    printf("\n");
+}
+
+void ReverseWords(char* str)
+{
+    int wordCount = 1;
+
+    for(int i = 0; str[i] != '\0'; i++)
+    {
+        if(str[i] == ' ' || str[i] == '\t')
+        {
+            wordCount++;
+        }
+    }
+
+    char** words = (char**)malloc(sizeof(char*) * wordCount);
+}
+
+int IsNumeric(char curChar)
+{
+    if(curChar >= '0' && curChar <= '9')
+    {
+        return 1;
+    }
+
+    return 0;
+}
+
+int MyStrnCmp(char* str1, char* str2, int numChars)
+{
+    int differences = 0;
+
+    for(int i = 0; i < numChars; i++)
+    {
+        if(str1[i] != str2[i])
+        {
+            differences++;
+        }
+
+        if(str1[i] == '\0' || str2[i] == '\0')
+        {
+            break;
+        }
+    }
+
+    return differences;
+}
+
+int MyStrNLen(char* str, int n)
+{
+    int strSize = 0;
+
+    for(int i = 0; i < n && str[i] != '\0'; i++)
+    {
+        strSize++;
+    }
+
+    return strSize;
+}
