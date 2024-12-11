@@ -3,15 +3,21 @@
 
 int GetUserInput(char* result);
 
-void CountVowels(char* str);
+// ===== String processing functions =====
+void CountVowels(const char* str);
 void SumNumbers(char* str);
 void StripWhiteSpace(char* str);
 void CompressInput(char* str);
+void ReverseWords(char* str);
+void FindIngWords(char* str);
 
+// ===== Character functions =====
 int IsNumeric(char curChar);
+int IsEndOfWord(char curChar);
 
-int MyStrnCmp(char* str1, char* str2, int numChars);
-int MyStrNLen(char* str, int n);
+// ===== String functions =====
+int MyStrnCmp(const char* str1, const char* str2, int numChars);
+int MyStrNLen(const char* str, int n);
 
 const int MAX_STR_SIZE = 999;
 
@@ -19,23 +25,40 @@ int main()
 {
     char* userExpression = (char*)malloc(sizeof(char) * MAX_STR_SIZE);
 
-    // Get input
-    if(GetUserInput(userExpression) == 0)
+    while(1)
     {
-        exit(-1);
+        // Get input
+        if(GetUserInput(userExpression) == 0)
+        {
+            exit(-1);
+        }
+
+        // Handle exit condition
+        if(MyStrnCmp(userExpression, "exit", MAX_STR_SIZE) == 0)
+        {
+            printf("Exiting program...\n");
+            break;
+        }
+
+        // Do the operations
+        CountVowels(userExpression);
+        ReverseWords(userExpression);
+        SumNumbers(userExpression);
+        FindIngWords(userExpression);
+        StripWhiteSpace(userExpression);
+        CompressInput(userExpression);
+
+        // Reset String
+        for(int i = 0; i < MAX_STR_SIZE; i++)
+        {
+            userExpression[i] = '\0';
+        }
+
+        break;
     }
 
-    // Handle exit condition
-    if(MyStrnCmp(userExpression, "exit", MAX_STR_SIZE) == 0)
-    {
-        printf("Exiting program...\n");
-        exit(0);
-    }
-
-    CountVowels(userExpression);
-    SumNumbers(userExpression);
-    StripWhiteSpace(userExpression);
-    CompressInput(userExpression);
+    // Free the string
+    free(userExpression);
 }
 
 int GetUserInput(char* result)
@@ -78,9 +101,11 @@ int GetUserInput(char* result)
 
     // Null-terminate string
     result[MAX_STR_SIZE - 1] = '\0';
+
+    return 1;
 }
 
-void CountVowels(char* str)
+void CountVowels(const char* str)
 {
     enum Vowels
     {
@@ -203,6 +228,7 @@ void CompressInput(char* str)
 
 void ReverseWords(char* str)
 {
+    // Get the word count and construct a 2d array
     int wordCount = 1;
 
     for(int i = 0; str[i] != '\0'; i++)
@@ -214,6 +240,128 @@ void ReverseWords(char* str)
     }
 
     char** words = (char**)malloc(sizeof(char*) * wordCount);
+
+    // Init the 2d array
+    for(int i = 0; i < wordCount; i++)
+    {
+        words[i] = (char*)malloc(sizeof(char) * MAX_STR_SIZE);
+    }
+
+    // Set all of the strings to '\0'
+    for(int i = 0; i < wordCount; i++)
+    {
+        for(int j = 0; j < MAX_STR_SIZE; j++)
+        {
+            words[i][j] = '\0';
+        }
+    }
+
+    // Get each word from the string
+    int curIndex = 0;
+    for(int i = 0; str[i] != '\0'; i++)
+    {
+        if(str[i] == ' ' || str[i] == '\t')
+        {
+            curIndex++;
+            continue;
+        }
+
+        sprintf(words[curIndex], "%s%c", words[curIndex], str[i]);
+    }
+
+    // Print results
+    printf("\n===== REVERSED WORDS =====\n");
+    for(int i = wordCount - 1; i >= 0; i--)
+    {
+        printf("%s ", words[i]);
+    }
+    printf("\n");
+
+    // Free the array
+    for(int i = 0; i < wordCount; i++)
+    {
+        free(words[i]);
+    }
+    free(words);
+}
+
+void FindIngWords(char* str)
+{
+    // Make string pointer
+    char* ingPtr = str;
+    char* wordPtr = str;
+
+    int ingCount = 0;
+    int wordLen = 0;
+    int curMaxWordLen = 0;
+
+    char* maxWord = NULL;
+
+    printf("\n===== ING WORDS =====\n");
+    printf("All \"-ing\" words:\n");
+
+    // Loop till end of instring
+    for(int i = 0; (ingPtr + 3)[0] != '\0'; i++)
+    {
+        // Adjust pointer
+        ingPtr = &(str[i]);
+
+        if(ingPtr == str || IsEndOfWord((ingPtr - 1)[0]))
+        {
+            wordPtr = ingPtr;
+        }
+        
+        // Look for "ing" words
+        if(ingPtr[0] == 'i' && ingPtr[1] == 'n' && ingPtr[2] == 'g' && IsEndOfWord(ingPtr[3]))
+        {
+            ingCount++;
+
+            wordLen = 0;
+            // Print word using word pointer
+            printf("  ");
+            for(int j = 0; !IsEndOfWord(wordPtr[j]); j++)
+            {
+                printf("%c", wordPtr[j]);
+                wordLen++;
+            }
+            printf("\n");
+
+            // Update maxWord
+            if(wordLen > curMaxWordLen)
+            {
+                curMaxWordLen = wordLen;
+                maxWord = wordPtr;
+            }
+        }
+    }
+
+    // Print statistics
+    if(maxWord != NULL)
+    {
+        printf("\nBiggest \"-ing\" word: ");
+        while(!IsEndOfWord(maxWord[0]))
+        {
+            printf("%c", maxWord[0]);
+            maxWord++;
+        }
+        printf("\n");
+    }
+    printf("\nNumber of \"-ing\" words: %i\n", ingCount);
+}
+
+int IsEndOfWord(char curChar)
+{
+    const char validEndChars[8] = {' ', '.', ',', '!', '\t', '?', '\0', '\n'};
+
+    for(int i = 0; i < 8; i++)
+    {
+        if(curChar == validEndChars[i])
+        {
+            return 1;
+        }
+    }
+
+    return 0;
 }
 
 int IsNumeric(char curChar)
@@ -226,7 +374,7 @@ int IsNumeric(char curChar)
     return 0;
 }
 
-int MyStrnCmp(char* str1, char* str2, int numChars)
+int MyStrnCmp(const char* str1, const char* str2, int numChars)
 {
     int differences = 0;
 
@@ -246,7 +394,7 @@ int MyStrnCmp(char* str1, char* str2, int numChars)
     return differences;
 }
 
-int MyStrNLen(char* str, int n)
+int MyStrNLen(const char* str, int n)
 {
     int strSize = 0;
 
